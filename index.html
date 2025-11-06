@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ربات های روبیکا</title>
     <style>
+        /* استایل‌های قبلی همگی اینجا قرار می‌گیرند */
         * {
             margin: 0;
             padding: 0;
@@ -36,7 +37,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* انیمیشن لوگو */
         .logo {
             width: 180px;
             height: 180px;
@@ -62,7 +62,6 @@
             66% { transform: translateY(-8px) rotate(-2deg); }
         }
 
-        /* استایل عنوان اصلی */
         .main-title {
             font-size: 2.8em;
             color: white;
@@ -80,7 +79,6 @@
             to { width: 100%; }
         }
 
-        /* استایل بخش کتابخانه‌ها */
         .libraries-section {
             animation: fadeInUp 1s ease-out 2s both;
             background: rgba(255, 255, 255, 0.1);
@@ -144,7 +142,6 @@
             }
         }
 
-        /* دکمه‌های فراخوانی */
         .cta-buttons {
             animation: fadeInUp 1s ease-out 2.5s both;
             display: flex;
@@ -182,38 +179,442 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
 
-        /* ریسپانسیو برای موبایل */
+        /* بخش مشاهده ربات‌ها */
+        .bots-section {
+            padding: 80px 20px;
+            background: #1a1a2e;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 50px;
+            color: #fff;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .code-container {
+            background: #0d1117;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 900px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #30363d;
+            overflow-x: auto;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .file-name {
+            color: #58a6ff;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+
+        .copy-btn {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #2ea043;
+        }
+
+        .code-content {
+            color: #e6edf3;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .keyword { color: #ff7b72; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; }
+        .function { color: #d2a8ff; }
+        .class { color: #ffa657; }
+
+        .bot-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 50px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            color: #58a6ff;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        /* بخش جدید: سازندگان */
+        .creators-section {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .creator-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .creator-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .creator-name {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .creator-username {
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            direction: ltr;
+        }
+
+        .creator-bio {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+        }
+
+        .achievements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .achievement {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .achievement-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #55efc4;
+            margin-bottom: 10px;
+        }
+
+        /* بخش جدید: مستندات */
+        .docs-section {
+            padding: 80px 20px;
+            background: #2d3436;
+            color: white;
+        }
+
+        .docs-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .doc-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .doc-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #667eea;
+        }
+
+        .doc-icon {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .doc-title {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .doc-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
         @media (max-width: 768px) {
             .logo { width: 120px; height: 120px; }
             .main-title { font-size: 2em; }
             .libraries-section { padding: 20px; }
             .library-badge { font-size: 1em; padding: 10px 20px; }
             .cta-buttons { flex-direction: column; }
+            .code-container { padding: 20px; margin: 10px; }
+            .section-title { font-size: 2em; }
+            .creator-card { padding: 30px 20px; }
+            .creator-name { font-size: 1.7em; }
         }
     </style>
 </head>
 <body>
+    <!-- بخش اصلی -->
     <section class="hero-section">
-        <!-- لوگوی شما -->
         <img src="logo.png" alt="لوگو ربات های روبیکا" class="logo">
-        
-        <!-- عنوان اصلی -->
         <h1 class="main-title">ربات های روبیکا به ارزان</h1>
-        
-        <!-- بخش کتابخانه‌ها -->
         <div class="libraries-section">
-            <div class="libraries-title">ساخته شده با ربات ها</div>
+            <div class="libraries-title">ساخته شده با</div>
             <div class="libraries-container">
                 <div class="library-badge">rubika</div>
                 <div class="library-badge">rubpy</div>
             </div>
         </div>
-        
-        <!-- دکمه‌های فراخوانی -->
         <div class="cta-buttons">
             <a href="#products" class="cta-button primary-btn">مشاهده ربات‌ها</a>
-            <a href="#documentation" class="cta-button secondary-btn">مستندات</a>
+            <a href="#creators" class="cta-button secondary-btn">سازندگان</a>
+            <a href="#docs" class="cta-button secondary-btn">مستندات</a>
         </div>
     </section>
+
+    <!-- بخش مشاهده ربات‌ها -->
+    <section id="products" class="bots-section">
+        <h2 class="section-title">ربات Ultimate Bot</h2>
+        
+        <div class="code-container">
+            <div class="code-header">
+                <div class="file-name">new bot (3).py</div>
+                <button class="copy-btn" onclick="copyCode()">کپی کد</button>
+            </div>
+            <pre class="code-content"><span class="keyword">import</span> rubpy
+<span class="keyword">from</span> rubpy.types <span class="keyword">import</span> Updates
+
+bot = rubpy.Client(<span class="string">"ultimate_bot"</span>)
+
+<span class="comment">@bot.on_message_updates()</span>
+<span class="keyword">async</span> <span class="keyword">def</span> <span class="function">updates</span>(message: Updates):  
+    <span class="keyword">print</span>(message)
+    <span class="keyword">if</span> message.text == <span class="string">"سلام"</span>: 
+        <span class="keyword">await</span> message.reply(<span class="string">"درود"</span>)
+    <span class="keyword">if</span> message.text == <span class="string">"خداحافظ"</span>:
+        <span class="keyword">await</span> message.reply(<span class="string">"بدرود عزیز"</span>)
+    <span class="keyword">if</span> message.text == <span class="string">"حسین"</span>:
+        <span class="keyword">await</span> message.reply(<span class="string">"حسین جواب بده"</span>)
+    <span class="keyword">if</span> message.text == <span class="string">"راهنما"</span>:
+        <span class="keyword">await</span> message.reply(<span class="string">"مگه ربات بازیم"</span>)
+    <span class="keyword">if</span> message.text == <span class="string">"سازنده ربات"</span>:
+        <span class="keyword">await</span> message.reply(<span class="string">"حسین"</span>)
+    <span class="keyword">if</span> message.text == <span class="string">"روشن"</span>:
+        bot.is_on = <span class="keyword">True</span>
+        <span class="keyword">await</span> message.reply(<span class="string">"✅ ربات روشن شد"</span>)
+    <span class="keyword">elif</span> message.text == <span class="string">"خاموش"</span>:
+        bot.is_on = <span class="keyword">False</span>
+        <span class="keyword">await</span> message.reply(<span class="string">"⛔ ربات خاموش شد"</span>)
+
+    <span class="keyword">if</span> <span class="string">"http://"</span> <span class="keyword">in</span> text <span class="keyword">or</span> <span class="string">"https://"</span> <span class="keyword">in</span> text <span class="keyword">or</span> <span class="string">"rubika.ir/"</span> <span class="keyword">in</span> text:
+        <span class="keyword">await</span> bot.delete_messages(message.object_guid, [message.message_id])
+        <span class="keyword">return</span>
+
+<span class="keyword">print</span>(<span class="string">"درست وارد اکانت شد مبارک باشه"</span>)
+bot.run()</pre>
+        </div>
+
+        <div class="bot-features">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">پاسخ‌دهی هوشمند</h3>
+                <p>ربات به کلمات کلیدی مانند "سلام"، "خداحافظ" و... پاسخ می‌دهد</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">کنترل روشن/خاموش</h3>
+                <p>قابلیت کنترل وضعیت ربات با دستورات "روشن" و "خاموش"</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3 class="feature-title">امنیت لینک</h3>
+                <p>حذف خودکار پیام‌های حاوی لینک برای افزایش امنیت</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3 class="feature-title">قابل توسعه</h3>
+                <p>کد تمیز و ساختاریافته برای اضافه کردن قابلیت‌های جدید</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- بخش جدید: سازندگان -->
+    <section id="creators" class="creators-section">
+        <h2 class="section-title">سازندگان ربات های روبیکا</h2>
+        
+        <div class="creator-card">
+            <div class="creator-avatar">H</div>
+            <h3 class="creator-name">حسین</h3>
+            <div class="creator-username">@hosseinbarana</div>
+            <p class="creator-bio">
+                ایشون به مدت 5 ماه به ساخت ربات ادامه دادند و بدون اینکه کلاسی یا دوره‌ای ببینند، 
+                ساخت ربات را به صورت خودآموز یاد گرفتند و الان در حال فروش ربات می‌باشند.
+            </p>
+            
+            <div class="achievements">
+                <div class="achievement">
+                    <div class="achievement-number">۵+</div>
+                    <div>ماه تجربه</div>
+                </div>
+                <div class="achievement">
+                    <div class="achievement-number">خودآموز</div>
+                    <div>یادگیری</div>
+                </div>
+                <div class="achievement">
+                    <div class="achievement-number">فعال</div>
+                    <div>فروش ربات</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- بخش جدید: مستندات -->
+    <section id="docs" class="docs-section">
+        <h2 class="section-title">مستندات و راهنما</h2>
+        
+        <div class="docs-container">
+            <div class="docs-grid">
+                <a href="#" class="doc-card">
+                    <div class="doc-icon">📚</div>
+                    <h3 class="doc-title">آموزش نصب</h3>
+                    <p class="doc-description">راهنمای کامل نصب و راه‌اندازی ربات روی سرور یا سیستم شخصی</p>
+                </a>
+                
+                <a href="#" class="doc-card">
+                    <div class="doc-icon">⚙️</div>
+                    <h3 class="doc-title">پیکربندی</h3>
+                    <p class="doc-description">تنظیمات پیشرفته و شخصی‌سازی ربات براساس نیاز شما</p>
+                </a>
+                
+                <a href="#" class="doc-card">
+                    <div class="doc-icon">🔧</div>
+                    <h3 class="doc-title">توسعه و سفارشی‌سازی</h3>
+                    <p class="doc-description">آموزش اضافه کردن قابلیت‌های جدید به ربات</p>
+                </a>
+                
+                <a href="#" class="doc-card">
+                    <div class="doc-icon">🐛</div>
+                    <h3 class="doc-title">عیب‌یابی</h3>
+                    <p class="doc-description">راه‌حل مشکلات رایج و خطاهای احتمالی</p>
+                </a>
+                
+                <a href="#" class="doc-card">
+                    <div class="doc-icon">📱</div>
+                    <h3 class="doc-title">API روبیکا</h3>
+                    <p class="doc-description">مستندات کامل کتابخانه rubpy و rubika</p>
+                </a>
+                
+                <a href="#" class="doc-card">
+                    <div class="doc-icon">💼</div>
+                    <h3 class="doc-title">نمونه‌های کاربردی</h3>
+                    <p class="doc-description">نمونه کدهای آماده برای استفاده در پروژه‌های مختلف</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function copyCode() {
+            const codeElement = document.querySelector('.code-content');
+            const textArea = document.createElement('textarea');
+            textArea.value = codeElement.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            const btn = document.querySelector('.copy-btn');
+            const originalText = btn.textContent;
+            btn.textContent = 'کپی شد!';
+            btn.style.background = '#58a6ff';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '#238636';
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
